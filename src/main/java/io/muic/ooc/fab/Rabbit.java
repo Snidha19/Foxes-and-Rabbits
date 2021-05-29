@@ -39,12 +39,13 @@ public class Rabbit extends Animal {
      * This is what the rabbit does most of the time - it runs around. Sometimes
      * it will breed or die of old age.
      *
-     * @param newRabbits A list to return newly born rabbits.
+     * @param animals A list to return newly born rabbits.
      */
-    public void run(List<Rabbit> newRabbits) {
+    @Override
+    public void act(List<Animal> animals) {
         incrementAge();
         if (isAlive()) {
-            giveBirth(newRabbits);
+            giveBirth(animals);
             // Try to move into a free location.
             Location newLocation = field.freeAdjacentLocation(location);
             if (newLocation != null) {

@@ -50,14 +50,14 @@ public class Fox extends Animal {
      * This is what the fox does most of the time: it hunts for rabbits. In the
      * process, it might breed, die of hunger, or die of old age.
      *
-     * @param field The field currently occupied.
-     * @param newFoxes A list to return newly born foxes.
+     * @param animals A list to return newly born foxes.
      */
-    public void hunt(List<Fox> newFoxes) {
+    @Override
+    public void act(List<Animal> animals) {
         incrementAge();
         incrementHunger();
         if (isAlive()) {
-            giveBirth(newFoxes);
+            giveBirth(animals);
             // Move towards a source of food if found.
             Location newLocation = findFood();
             if (newLocation == null) {
@@ -92,9 +92,7 @@ public class Fox extends Animal {
      */
     private Location findFood() {
         List<Location> adjacent = field.adjacentLocations(location);
-        Iterator<Location> it = adjacent.iterator();
-        while (it.hasNext()) {
-            Location where = it.next();
+        for (Location where : adjacent) {
             Object animal = field.getObjectAt(where);
             if (animal instanceof Rabbit) {
                 Rabbit rabbit = (Rabbit) animal;
