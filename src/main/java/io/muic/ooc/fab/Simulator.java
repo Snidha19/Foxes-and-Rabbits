@@ -3,11 +3,10 @@ package io.muic.ooc.fab;
 
 import io.muic.ooc.fab.view.SimulatorView;
 
-import java.util.Random;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.awt.Color;
+
 
 public class Simulator {
 

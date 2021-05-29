@@ -7,16 +7,6 @@ public class Rabbit extends Animal {
     // Characteristics shared by all rabbits (class variables).
 
     @Override
-    protected Location moveToNewLocation() {
-        return field.freeAdjacentLocation(getLocation());
-    }
-
-    @Override
-    protected double getBreedingProbability() {
-        return AnimalType.RABBIT.getBreedingProbability();
-    }
-
-    @Override
     protected int getMaxLitterSize() {
         return 4;
     }
@@ -32,9 +22,13 @@ public class Rabbit extends Animal {
     }
 
     @Override
-    protected Location findFood() {
-        return null;
+    protected double getBreedingProbability() {
+        return AnimalType.RABBIT.getBreedingProbability();
     }
 
+    @Override
+    protected Location moveToNewLocation() {
+        return field.freeAdjacentLocation(getLocation());
+    }
 
 }

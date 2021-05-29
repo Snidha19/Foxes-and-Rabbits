@@ -8,20 +8,26 @@ public abstract class Animal {
 
     protected static final Random RANDOM = new Random();
 
-    // Whether the animal is alive or not.
     private boolean alive;
 
-    // The animal's position.
     private Location location;
 
-    // The field occupied.
     protected Field field;
 
-    // The animal's age.
     private int age = 0;
 
     protected int foodLevel;
 
+    protected abstract Location moveToNewLocation();
+
+    public abstract int getMaxAge();
+
+    protected abstract double getBreedingProbability();
+
+    protected abstract int getMaxLitterSize();
+
+    /** The age at which a fox can start to breed. **/
+    protected abstract int getBreedingAge();
 
     /**
      * Create an animal. An animal can be created as a new born (age zero and not
@@ -37,6 +43,26 @@ public abstract class Animal {
         setLocation(location);
         if (randomAge) {
             age = RANDOM.nextInt(getMaxAge());
+        }
+    }
+
+    /**
+     * This is what the animals does most of the time: it hunts for other animals. In the
+     * process, it might breed, die of hunger, or die of old age.
+     *
+     * @param animals A list to return newly born animals.
+     */
+    public void act(List<Animal> animals){
+        incrementAge();
+        if (isAlive()) {
+            giveBirth(animals);
+            Location newLocation = moveToNewLocation();
+            if (newLocation != null) {
+                setLocation(newLocation);
+            } else {
+                // Overcrowding.
+                setDead();
+            }
         }
     }
 
@@ -62,30 +88,6 @@ public abstract class Animal {
         return location;
     }
 
-    public abstract int getMaxAge();
-
-    /**
-     * Increase the age. This could result in the animal's death.
-     */
-    protected void incrementAge() {
-        age++;
-        if (age > getMaxAge()) {
-            setDead();
-        }
-    }
-
-    /**
-     * Indicate that the animal is no longer alive. It is removed from the field.
-     */
-    protected void setDead() {
-        setAlive(false);
-        if (location != null) {
-            field.clear(location);
-            location = null;
-            field = null;
-        }
-    }
-
     /**
      * Place the animal at the new location in the given field.
      *
@@ -100,6 +102,16 @@ public abstract class Animal {
     }
 
     /**
+     * An animal can breed if it has reached the breeding age.
+     *
+     * @return true if the animal can breed, false otherwise.
+     */
+    private boolean canBreed() {
+        return age >= getBreedingAge();
+    }
+
+
+    /**
      * Generate a number representing the number of births, if it can breed.
      *
      * @return The number of births (may be zero).
@@ -110,26 +122,6 @@ public abstract class Animal {
             births = RANDOM.nextInt(getMaxLitterSize()) + 1;
         }
         return births;
-    }
-
-    protected abstract double getBreedingProbability();
-
-    protected abstract int getMaxLitterSize();
-
-    /**
-     * An animal can breed if it has reached the breeding age.
-     *
-     * @return true if the animal can breed, false otherwise.
-     */
-    private boolean canBreed() {
-        return age >= getBreedingAge();
-    }
-
-    /** The age at which a fox can start to breed. **/
-    protected abstract int getBreedingAge();
-
-    private Animal createYoung(boolean randomAge, Field field, Location location){
-        return AnimalFactory.createAnimal(getClass(), field, location);
     }
 
     /**
@@ -150,27 +142,29 @@ public abstract class Animal {
         }
     }
 
-    protected abstract Location findFood();
-
-    protected abstract Location moveToNewLocation();
+    private Animal createYoung(boolean randomAge, Field field, Location location){
+        return AnimalFactory.createAnimal(getClass(), field, location);
+    }
 
     /**
-     * This is what the animals does most of the time: it hunts for other animals. In the
-     * process, it might breed, die of hunger, or die of old age.
-     *
-     * @param animals A list to return newly born animals.
+     * Increase the age. This could result in the animal's death.
      */
-    public void act(List<Animal> animals){
-        incrementAge();
-        if (isAlive()) {
-            giveBirth(animals);
-            Location newLocation = moveToNewLocation();
-            if (newLocation != null) {
-                setLocation(newLocation);
-            } else {
-                // Overcrowding.
-                setDead();
-            }
+    protected void incrementAge() {
+        age++;
+        if (age > getMaxAge()) {
+            setDead();
+        }
+    }
+
+    /**
+     * Indicate that the animal is no longer alive. It is removed from the field.
+     */
+    protected void setDead() {
+        setAlive(false);
+        if (location != null) {
+            field.clear(location);
+            location = null;
+            field = null;
         }
     }
 

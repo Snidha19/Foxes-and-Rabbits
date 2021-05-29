@@ -6,6 +6,20 @@ public class Hunter extends Animal{
     // Characteristics shared by all foxes (class variables).
 
     @Override
+    public int getMaxAge() { return 130; }
+
+    @Override
+    protected double getBreedingProbability() { return AnimalType.HUNTER.getBreedingProbability(); }
+
+    @Override
+    protected int getMaxLitterSize() { return 5; }
+
+    @Override
+    protected int getBreedingAge() {
+        return 20;
+    }
+
+    @Override
     public void initialize(boolean randomAge, io.muic.ooc.fab.Field field, Location location) {
         super.initialize(randomAge, field, location);
         foodLevel = RANDOM.nextInt(AnimalType.TIGER.getFoodValue());
@@ -62,25 +76,5 @@ public class Hunter extends Animal{
             }
         }
         return null;
-    }
-
-    @Override
-    public int getMaxAge() {
-        return 130;
-    }
-
-    @Override
-    protected double getBreedingProbability() {
-        return AnimalType.HUNTER.getBreedingProbability();
-    }
-
-    @Override
-    protected int getMaxLitterSize() {
-        return 5;
-    }
-
-    @Override
-    protected int getBreedingAge() {
-        return 20;
     }
 }
