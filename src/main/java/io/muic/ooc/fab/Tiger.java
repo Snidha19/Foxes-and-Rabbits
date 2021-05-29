@@ -3,19 +3,19 @@ package io.muic.ooc.fab;
 import java.util.List;
 import java.util.Random;
 
-public class Fox extends Animal {
-    // Characteristics shared by all foxes (class variables).
+public class Tiger extends Animal{
+    // Characteristics shared by all tigers (class variables).
 
     @Override
     public void initialize(boolean randomAge, Field field, Location location) {
         super.initialize(randomAge, field, location);
-        foodLevel = RANDOM.nextInt(AnimalType.RABBIT.getFoodValue());
+        foodLevel = RANDOM.nextInt(AnimalType.FOX.getFoodValue());
     }
 
     @Override
     protected Location moveToNewLocation(){
         Location newLocation = findFood();
-        if (newLocation == null) {  // No food found - try to move to a free location.
+        if (newLocation == null) {   // No food found - try to move to a free location.
             newLocation = field.freeAdjacentLocation(getLocation());
         }
         return newLocation;
@@ -28,7 +28,7 @@ public class Fox extends Animal {
     }
 
     /**
-     * Make this fox more hungry. This could result in the fox's death.
+     * Make this tiger more hungry. This could result in the tiger's death.
      */
     private void incrementHunger() {
         foodLevel--;
@@ -38,8 +38,8 @@ public class Fox extends Animal {
     }
 
     /**
-     * Look for rabbits adjacent to the current location. Only the first live
-     * rabbit is eaten.
+     * Look for rabbits and foxes adjacent to the current location. Only the first live
+     * rabbit/fox is eaten.
      *
      * @return Where food was found, or null if it wasn't.
      */
@@ -55,18 +55,26 @@ public class Fox extends Animal {
                     return where;
                 }
             }
+            if (animal instanceof Fox) {
+                Fox fox = (Fox) animal;
+                if (fox.isAlive()) {
+                    fox.setDead();
+                    foodLevel = AnimalType.FOX.getFoodValue();
+                    return where;
+                }
+            }
         }
         return null;
     }
 
     @Override
     public int getMaxAge() {
-        return 180;
+        return 200;
     }
 
     @Override
     protected double getBreedingProbability() {
-        return AnimalType.FOX.getBreedingProbability();
+        return AnimalType.TIGER.getBreedingProbability();
     }
 
     @Override
@@ -76,6 +84,6 @@ public class Fox extends Animal {
 
     @Override
     protected int getBreedingAge() {
-        return 15;
+        return 30;
     }
 }

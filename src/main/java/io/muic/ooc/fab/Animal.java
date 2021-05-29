@@ -1,22 +1,44 @@
 package io.muic.ooc.fab;
 
+import java.sql.SQLOutput;
 import java.util.List;
 import java.util.Random;
 
 public abstract class Animal {
+
+    protected static final Random RANDOM = new Random();
+
     // Whether the animal is alive or not.
     private boolean alive;
 
     // The animal's position.
-    protected Location location;
+    private Location location;
+
     // The field occupied.
     protected Field field;
-    // Individual characteristics (instance fields).
+
     // The animal's age.
-    protected int age;
+    private int age = 0;
 
-    private static final Random RANDOM = new Random();
+    protected int foodLevel;
 
+
+    /**
+     * Create an animal. An animal can be created as a new born (age zero and not
+     * hungry) or with a random age and with or without food level(depends on class of Animal).
+     *
+     * @param randomAge If true, the animal will have random age and hunger level.
+     * @param field The field currently occupied.
+     * @param location The location within the field.
+     */
+    public void initialize(boolean randomAge, Field field, Location location){
+        setAlive(true);
+        this.field = field;
+        setLocation(location);
+        if (randomAge) {
+            age = RANDOM.nextInt(getMaxAge());
+        }
+    }
 
     /**
      * Check whether the animal is alive or not.
@@ -52,7 +74,6 @@ public abstract class Animal {
         }
     }
 
-
     /**
      * Indicate that the animal is no longer alive. It is removed from the field.
      */
@@ -83,7 +104,7 @@ public abstract class Animal {
      *
      * @return The number of births (may be zero).
      */
-    protected int breed() {
+    private int breed() {
         int births = 0;
         if (canBreed() && RANDOM.nextDouble() <= getBreedingProbability()) {
             births = RANDOM.nextInt(getMaxLitterSize()) + 1;
@@ -92,6 +113,7 @@ public abstract class Animal {
     }
 
     protected abstract double getBreedingProbability();
+
     protected abstract int getMaxLitterSize();
 
     /**
@@ -103,9 +125,12 @@ public abstract class Animal {
         return age >= getBreedingAge();
     }
 
+    /** The age at which a fox can start to breed. **/
     protected abstract int getBreedingAge();
 
-    protected abstract Animal createYoung(boolean randomAge, Field field, Location location);
+    private Animal createYoung(boolean randomAge, Field field, Location location){
+        return AnimalFactory.createAnimal(getClass(), field, location);
+    }
 
     /**
      * Check whether or not this rabbit is to give birth at this step. New
@@ -114,7 +139,7 @@ public abstract class Animal {
      * @param newAnimals A list to return newly born animals.
      */
     protected void giveBirth(List<Animal> newAnimals) {
-        // New rabbits are born into adjacent locations.
+        // New animals are born into adjacent locations.
         // Get a list of adjacent free locations.
         List<Location> free = field.getFreeAdjacentLocations(location);
         int births = breed();
@@ -125,7 +150,28 @@ public abstract class Animal {
         }
     }
 
-    public abstract void act(List<Animal> animals);
+    protected abstract Location findFood();
 
+    protected abstract Location moveToNewLocation();
+
+    /**
+     * This is what the animals does most of the time: it hunts for other animals. In the
+     * process, it might breed, die of hunger, or die of old age.
+     *
+     * @param animals A list to return newly born animals.
+     */
+    public void act(List<Animal> animals){
+        incrementAge();
+        if (isAlive()) {
+            giveBirth(animals);
+            Location newLocation = moveToNewLocation();
+            if (newLocation != null) {
+                setLocation(newLocation);
+            } else {
+                // Overcrowding.
+                setDead();
+            }
+        }
+    }
 
 }
