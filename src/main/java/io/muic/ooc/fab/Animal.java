@@ -1,10 +1,9 @@
 package io.muic.ooc.fab;
 
-import java.sql.SQLOutput;
 import java.util.List;
 import java.util.Random;
 
-public abstract class Animal {
+public abstract class Animal{
 
     protected static final Random RANDOM = new Random();
 
@@ -17,8 +16,6 @@ public abstract class Animal {
     private int age = 0;
 
     protected int foodLevel;
-
-    protected abstract Location moveToNewLocation();
 
     public abstract int getMaxAge();
 
@@ -53,6 +50,7 @@ public abstract class Animal {
      * @param animals A list to return newly born animals.
      */
     public void act(List<Animal> animals){
+        incrementHunger();
         incrementAge();
         if (isAlive()) {
             giveBirth(animals);
@@ -65,6 +63,58 @@ public abstract class Animal {
             }
         }
     }
+
+    /**
+     * Make this animal more hungry. This could result in the animal's death.
+     */
+    protected void incrementHunger() {
+        foodLevel--;
+        if (foodLevel <= 0) {
+            setDead();
+        }
+    }
+
+    protected Location moveToNewLocation(){
+        Location newLocation = findFood();
+        if (newLocation == null) {  // No food found - try to move to a free location.
+            newLocation = field.freeAdjacentLocation(getLocation());
+        }
+        return newLocation;
+    }
+
+    /**
+     * Look for rabbits adjacent to the current location. Only the first live
+     * rabbit is eaten.
+     *
+     * @return Where food was found, or null if it wasn't.
+     */
+    public Location findFood() {
+        List<Location> adjacent = field.adjacentLocations(getLocation());
+        for (Location where : adjacent) {
+            Animal animal = (Animal) field.getObjectAt(where);
+            if (kill(animal)) {
+                if (animal.isAlive()) {
+                    animal.setDead();
+                    foodLevel = getFoodValue(animal);
+                    return where;
+                }
+            }
+        }
+        return null;
+    }
+
+    private int getFoodValue(Animal animal) {
+        if(animal instanceof Rabbit) {
+            return AnimalType.RABBIT.getFoodValue();
+        }else if(animal instanceof Fox) {
+            return AnimalType.FOX.getFoodValue();
+        }else if(animal instanceof Tiger) {
+            return AnimalType.TIGER.getFoodValue();
+        }
+        return 0;
+    }
+
+    protected abstract boolean kill(Animal animal);
 
     /**
      * Check whether the animal is alive or not.
@@ -100,6 +150,8 @@ public abstract class Animal {
         location = newLocation;
         field.place(this, newLocation);
     }
+
+
 
     /**
      * An animal can breed if it has reached the breeding age.

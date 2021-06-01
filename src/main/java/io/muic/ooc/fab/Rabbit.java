@@ -1,8 +1,5 @@
 package io.muic.ooc.fab;
 
-import java.util.List;
-import java.util.Random;
-
 public class Rabbit extends Animal {
     // Characteristics shared by all rabbits (class variables).
 
@@ -29,6 +26,15 @@ public class Rabbit extends Animal {
     @Override
     protected Location moveToNewLocation() {
         return field.freeAdjacentLocation(getLocation());
+    }
+
+    @Override
+    protected boolean kill(Animal animal) {
+        return false;
+    }
+
+    @Override
+    protected void incrementHunger(){
     }
 
 }

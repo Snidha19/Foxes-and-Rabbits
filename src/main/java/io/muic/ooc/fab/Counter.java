@@ -7,13 +7,20 @@ public class Counter {
     // How many of this type exist in the simulation.
     private int count;
 
+    private Class animal;
+
     /**
      * Provide a name for one of the simulation types.
      *
-     * @param name A name, e.g. "Fox".
+     * @param animal A name, e.g. "Fox".
      */
-    public Counter(String name) {
-        this.name = name;
+//    public Counter(String name) {
+//        this.name = name;
+//        count = 0;
+//    }
+
+    public Counter(Class animal) {
+        this.name = animal.getName();
         count = 0;
     }
 
