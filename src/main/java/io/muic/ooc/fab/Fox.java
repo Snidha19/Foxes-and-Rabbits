@@ -13,12 +13,12 @@ public class Fox extends Animal {
 
     @Override
     protected int getMaxLitterSize() {
-        return 2;
+        return 4;
     }
 
     @Override
     protected int getBreedingAge() {
-        return 15;
+        return 12;
     }
 
     @Override

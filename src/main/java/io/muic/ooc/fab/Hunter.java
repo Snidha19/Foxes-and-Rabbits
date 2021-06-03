@@ -24,7 +24,7 @@ public class Hunter extends Animal{
     @Override
     public void initialize(boolean randomAge, io.muic.ooc.fab.Field field, Location location) {
         super.initialize(randomAge, field, location);
-        foodLevel = RANDOM.nextInt(AnimalType.TIGER.getFoodValue());
+        foodLevel = RANDOM.nextInt(AnimalType.RABBIT.getFoodValue());
     }
 
     @Override

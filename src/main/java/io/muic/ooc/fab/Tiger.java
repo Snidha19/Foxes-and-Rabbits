@@ -26,7 +26,7 @@ public class Tiger extends Animal{
     @Override
     public void initialize(boolean randomAge, Field field, Location location) {
         super.initialize(randomAge, field, location);
-        foodLevel = RANDOM.nextInt(AnimalType.FOX.getFoodValue());
+        foodLevel = RANDOM.nextInt(AnimalType.RABBIT.getFoodValue());
     }
 
     @Override
