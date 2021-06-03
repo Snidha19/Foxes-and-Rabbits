@@ -3,21 +3,13 @@ package io.muic.ooc.fab;
 import java.util.HashMap;
 
 public class FieldStats {
-
-    // Counters for each type of entity (fox, rabbit, etc.) in the simulation.
-    private HashMap<Class, Counter> counters;
     // Whether the counters are currently up to date.
-    private boolean countsValid;
+    private boolean countsValid = true;
 
-    /**
-     * Construct a FieldStats object.
-     */
-    public FieldStats() {
-        // Set up a collection for counters for each type of animal that
-        // we might find
-        counters = new HashMap<>();
-        countsValid = true;
-    }
+    private FoxCounter foxCount = new FoxCounter();
+    private RabbitCounter rabbitCount = new RabbitCounter();
+    private TigerCounter tigerCount = new TigerCounter();
+    private HunterCounter hunterCount = new HunterCounter();
 
     /**
      * Get details of what is in the field.
@@ -26,17 +18,14 @@ public class FieldStats {
      * @return A string describing what is in the field.
      */
     public String getPopulationDetails(Field field) {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         if (!countsValid) {
             generateCounts(field);
         }
-        for (Class key : counters.keySet()) {
-            Counter info = counters.get(key);
-            buffer.append(info.getName());
-            buffer.append(": ");
-            buffer.append(info.getCount());
-            buffer.append(' ');
-        }
+        buffer.append(String.format("%s: %d ", foxCount.getName(), foxCount.getCount()));
+        buffer.append(String.format("%s: %d ", rabbitCount.getName(), rabbitCount.getCount()));
+        buffer.append(String.format("%s: %d ", tigerCount.getName(), tigerCount.getCount()));
+        buffer.append(String.format("%s: %d ", hunterCount.getName(), hunterCount.getCount()));
         return buffer.toString();
     }
 
@@ -45,26 +34,22 @@ public class FieldStats {
      */
     public void reset() {
         countsValid = false;
-        for (Class key : counters.keySet()) {
-            Counter count = counters.get(key);
-            count.reset();
-        }
+        foxCount.reset();
+        rabbitCount.reset();
+        tigerCount.reset();
+        hunterCount.reset();
     }
 
     /**
      * Increment the count for one class of animal.
      *
-     * @param animalClass The class of animal to increment.
+     * @param animal The class of animal to increment.
      */
-    public void incrementCount(Class animalClass) {
-        Counter count = counters.get(animalClass);
-        if (count == null) {
-            // We do not have a counter for this species yet.
-            // Create one.
-            count = new Counter(animalClass);
-            counters.put(animalClass, count);
-        }
-        count.increment();
+    public void incrementCount(Object animal) {
+        if(animal instanceof Fox) foxCount.increment();
+        if(animal instanceof Rabbit) rabbitCount.increment();
+        if(animal instanceof Tiger) tigerCount.increment();
+        if(animal instanceof Hunter) hunterCount.increment();
     }
 
     /**
@@ -86,11 +71,17 @@ public class FieldStats {
         if (!countsValid) {
             generateCounts(field);
         }
-        for (Class key : counters.keySet()) {
-            Counter info = counters.get(key);
-            if (info.getCount() > 0) {
-                nonZero++;
-            }
+        if (foxCount.getCount() > 0) {
+            nonZero++;
+        }
+        if(rabbitCount.getCount() > 0){
+            nonZero++;
+        }
+        if(tigerCount.getCount() > 0){
+            nonZero++;
+        }
+        if(hunterCount.getCount() > 0){
+            nonZero++;
         }
         return nonZero > 1;
     }
@@ -108,7 +99,7 @@ public class FieldStats {
             for (int col = 0; col < field.getWidth(); col++) {
                 Object animal = field.getObjectAt(row, col);
                 if (animal != null) {
-                    incrementCount(animal.getClass());
+                    incrementCount(animal);
                 }
             }
         }
