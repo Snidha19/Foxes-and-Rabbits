@@ -67,21 +67,9 @@ public class FieldStats {
      */
     public boolean isViable(Field field) {
         // How many counts are non-zero.
-        int nonZero = 0;
+        int nonZero = foxCount.getCount() + rabbitCount.getCount() + tigerCount.getCount() + hunterCount.getCount();
         if (!countsValid) {
             generateCounts(field);
-        }
-        if (foxCount.getCount() > 0) {
-            nonZero++;
-        }
-        if(rabbitCount.getCount() > 0){
-            nonZero++;
-        }
-        if(tigerCount.getCount() > 0){
-            nonZero++;
-        }
-        if(hunterCount.getCount() > 0){
-            nonZero++;
         }
         return nonZero > 1;
     }
