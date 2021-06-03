@@ -2,7 +2,7 @@ package io.muic.ooc.fab;
 
 public class FoxCounter {
     // How many of this type exist in the simulation.
-    private int count;
+    protected int count;
 
     /**
      * @return The short description of this type.
@@ -16,19 +16,5 @@ public class FoxCounter {
      */
     public int getCount() {
         return count;
-    }
-
-    /**
-     * Increment the current count by one.
-     */
-    public void increment() {
-        count++;
-    }
-
-    /**
-     * Reset the current count to zero.
-     */
-    public void reset() {
-        count = 0;
     }
 }

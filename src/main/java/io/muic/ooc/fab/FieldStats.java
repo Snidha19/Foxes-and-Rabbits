@@ -34,10 +34,10 @@ public class FieldStats {
      */
     public void reset() {
         countsValid = false;
-        foxCount.reset();
-        rabbitCount.reset();
-        tigerCount.reset();
-        hunterCount.reset();
+        foxCount.count = 0;
+        rabbitCount.count = 0;
+        tigerCount.count = 0;
+        hunterCount.count = 0;
     }
 
     /**
@@ -46,10 +46,10 @@ public class FieldStats {
      * @param animal The class of animal to increment.
      */
     public void incrementCount(Object animal) {
-        if(animal instanceof Fox) foxCount.increment();
-        if(animal instanceof Rabbit) rabbitCount.increment();
-        if(animal instanceof Tiger) tigerCount.increment();
-        if(animal instanceof Hunter) hunterCount.increment();
+        if(animal instanceof Fox) foxCount.count++;
+        else if(animal instanceof Rabbit) rabbitCount.count++;
+        else if(animal instanceof Tiger) tigerCount.count++;
+        else if(animal instanceof Hunter) hunterCount.count++;
     }
 
     /**
