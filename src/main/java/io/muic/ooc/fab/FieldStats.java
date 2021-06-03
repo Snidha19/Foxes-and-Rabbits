@@ -22,10 +22,10 @@ public class FieldStats {
         if (!countsValid) {
             generateCounts(field);
         }
-        buffer.append(String.format("%s: %d ", foxCount.getName(), foxCount.getCount()));
-        buffer.append(String.format("%s: %d ", rabbitCount.getName(), rabbitCount.getCount()));
-        buffer.append(String.format("%s: %d ", tigerCount.getName(), tigerCount.getCount()));
-        buffer.append(String.format("%s: %d ", hunterCount.getName(), hunterCount.getCount()));
+        buffer.append(String.format("%s: %d  ", foxCount.getName(), foxCount.getCount()));
+        buffer.append(String.format("%s: %d  ", rabbitCount.getName(), rabbitCount.getCount()));
+        buffer.append(String.format("%s: %d  ", tigerCount.getName(), tigerCount.getCount()));
+        buffer.append(String.format("%s: %d  ", hunterCount.getName(), hunterCount.getCount()));
         return buffer.toString();
     }
 

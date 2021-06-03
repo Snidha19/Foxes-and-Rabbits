@@ -27,7 +27,7 @@ public class SimulatorView extends JFrame {
     private static final Color UNKNOWN_COLOR = Color.gray;
 
     private final String STEP_PREFIX = "Step: ";
-    private final String POPULATION_PREFIX = "Population: ";
+    private final String POPULATION_PREFIX = "Population:   ";
     private JLabel stepLabel, population;
     private FieldView fieldView;
 
